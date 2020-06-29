@@ -25,7 +25,8 @@ body,html,html * {
 body,html {
   font-family: sans-serif;
   font-size: 12px;
-  color: #333
+  color: #333;
+  width: 100%;
 }
 
 button,input[type=button],input[type=reset],input[type=submit],input[type=text] {
@@ -100,4 +101,7 @@ iframe {
   line-height: 0;
   overflow: hidden;
   display: none
+}
+.am-list-view-scrollview-content{
+  width: 100%;
 }

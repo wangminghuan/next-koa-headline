@@ -24,8 +24,7 @@ class Home extends Component{
             基于NextJs创建的SSR项目
           </h2>
           <div className="links">
-          <Link href="/patent?id=4"><Button type="primary" style={ {marginRight:'20px'}} inline >进入专栏页面</Button></Link>
-          <Link href="/subject?id=2"><Button type="primary" inline >进入专题页面</Button></Link>
+          <Link href="/list"><Button type="primary" inline >今日头条-推荐板块</Button></Link>
           </div>
           </div>
           <style jsx>{

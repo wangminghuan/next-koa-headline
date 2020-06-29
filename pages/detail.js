@@ -4,8 +4,34 @@ import Router from 'next/router'
 class Detail extends Component{
   constructor(props){
     super(props);
+    const renderData=this.props.renderData
     this.state={
-      isRefresh:false
+      isRefresh:false,
+      renderData:renderData
+    }
+  }
+  $formatTime(data,type){
+    var _data = data;
+    //如果是13位正常，如果是10位则需要转化为毫秒
+    if (String(data).length == 13) {
+      _data = data
+    } else {
+      _data = data*1000
+    }
+    const time = new Date(_data);    
+    const Y = time.getFullYear();
+    const Mon = time.getMonth() + 1;
+    const Day = time.getDate();
+    const H = time.getHours();
+    const Min = time.getMinutes();
+    const S = time.getSeconds();
+    //自定义选择想要返回的类型
+    if(type==="Y"){
+      return `${Y}-${Mon}-${Day}`
+    }else if(type==="H"){
+      return `${H}:${Min}:${S}`
+    }else{
+      return `${Y}-${Mon}-${Day} ${H}:${Min}:${S}`
     }
   }
   handleJump(item){
@@ -23,34 +49,18 @@ class Detail extends Component{
     return (
       <div>
       <div className="detail-outer-wrap" style={{display:this.state.isRefresh?"none":"block"}}>
-    <div className="detail-inner-wrap">
+      <div className="detail-inner-wrap">
       <div className="article-wrap">
-        <h2>{this.props.renderData.title}</h2>
-        <p className="article-info"><span className="time">{this.props.renderData.detail.time}</span> <span>阅读<i>{this.props.renderData.detail.ha_readNum}</i></span> <span>赞<i>{this.props.renderData.detail.ha_upNum}</i></span></p>
-        <div className="content-wrap">
-          <div className="content ql-editor" dangerouslySetInnerHTML = {{ __html:this.props.renderData.detail.ha_content }}></div>
+        <h2>{this.state.renderData.title}</h2>
+        <div className="article-info">
+        <div className="left">
+         <img style={{width:'20px',marginRight:'10px'}} src={this.state.renderData.media_user.avatar_url} alt="img" /><span>{this.state.renderData.source}</span>
         </div>
-        <p className="article-info"><span>小编：<i>{this.props.renderData.detail.ha_author}</i></span> <span>文章来源：<i>{this.props.renderData.detail.ha_source}</i></span></p>
-      </div>
-      <div className="recom-more">
-        <h4 className="detail-com-title"><em>相关推荐</em></h4>
-        <ul className="article-list-wrap">
-          {this.props.renderData.recommendList.map((item,index)=>
-             <li className="article-list-item"
-             key={index}
-             onClick={()=>this.handleJump(item)}>
-           <div className="cont">
-             <p>{item.ha_title}</p>
-             <ul className="tag-btm">
-               <div className="nums"><b><em className="tag">{item.ha_tags}</em><em className="read">阅读 {item.ha_readNum}</em></b> <em className="time">{item.time}
-                 </em></div>
-             </ul>
-           </div>
-           <div className="pic"><img src={item.ha_image} alt="pic" /></div>
-         </li> 
-          )}
-          
-        </ul>
+        <div className="right"><span>{this.state.renderData.comment_count}评论 </span><em v-if="renderData.publish_time">{this.$formatTime(this.state.renderData.publish_time)}</em></div>
+        </div>
+        <div className="content-wrap">
+          <div className="content ql-editor" dangerouslySetInnerHTML = {{ __html:this.state.renderData.content}}></div>
+        </div>
       </div>
     </div>
     <div style={{height:'20px'} }></div>
@@ -118,7 +128,24 @@ class Detail extends Component{
             color: #999;
             line-height: 20px;
             margin: 32px 0;
+            display: -webkit-box;
+            display: -ms-flexbox;
+            display: flex;
+            -webkit-box-align: center;
+            -ms-flex-align: center;
+                    align-items: center;
+            -webkit-box-pack: justify;
+            -ms-flex-pack: justify;
+                    justify-content: space-between;
           }
+          .article-info .left, .article-info .right{
+            display: -webkit-box;
+            display: -ms-flexbox;
+            display: flex;
+            -webkit-box-align: center;
+            -ms-flex-align: center;
+                    align-items: center;
+            }
           
           .article-info i {
             margin-left: 5px;
@@ -149,15 +176,13 @@ class Detail extends Component{
   }
 }
 Detail.getInitialProps = async ({ query }) => {
- const res = await http.get(`/api/head/head/detail`, {params: {
-   ha_id: query.id
+ const res = await http.get(process.browser?`/api/i${query.id}/info/`:`/i${query.id}/info/`, {params: {
+  _signature:'HLIIRxARQk77xfBBg2LRhxyyCF',
+  i:query.id
  }});
  const renderData=res.data.data||{};
- if(!renderData.commentList)renderData.commentList=[];
- if(!renderData.detail)renderData.detail={};
- if(!renderData.recommendList)renderData.recommendList=[];
  return {  
-  renderData:renderData||{}
+  renderData:renderData
  }
 }
 export default Detail;

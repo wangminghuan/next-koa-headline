@@ -29,7 +29,7 @@
 
 .article-list-item .cont {
   min-width: 172px;
-  height: 78px;
+  /* height: 78px; */
   width: 100%;
 }
 
@@ -136,4 +136,20 @@
 
 .article-list-item:last-of-type:after {
   display: none
+}
+.article-list-item .img-arr {
+  margin-top: 20px;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -moz-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: justify;
+  -webkit-justify-content: space-between;
+  -moz-box-pack: justify;
+  -ms-flex-pack: justify;
+  justify-content: space-between;
+}
+.article-list-item .img-arr .pic {
+  width: 30%;
 }

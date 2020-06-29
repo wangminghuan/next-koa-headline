@@ -16,10 +16,10 @@ app.prepare().then(() => {
     ctx.respond = false
   })
   server.use(proxy('/api', {
-    target: 'http://service.inswindows.com',
+    target: 'https://m.toutiao.com',
     changeOrigin: true,
     pathRewrite: {
-      // '^/app/': ''
+      '^/api/': '/'
     }
   }));
   server.use(async (ctx, next) => {
